@@ -1,0 +1,18 @@
+<template>
+    <template if:true={isLoaded}>
+        <lightning-spinner 
+            alternative-text="Loading" 
+            size="large">
+        </lightning-spinner>
+    </template>
+    <lightning-card variant="Narrow" icon-name="standard:file" title="File Upload">
+        <p class="slds-var-p-horizontal_small">
+            <lightning-file-upload 
+                accept={acceptedFormats} 
+                label="Attach CSV File" 
+                multiple="multiple" 
+                onuploadfinished={uploadFileHandler}>
+            </lightning-file-upload>
+        </p>
+    </lightning-card>
+</template>

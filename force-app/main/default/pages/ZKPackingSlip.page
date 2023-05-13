@@ -1,0 +1,95 @@
+<!-- Content Starts HereContent Starts Here
+Visualforce Page
+zkmulti__PackingSlipZPLTemplatePage
+Help for this Page
+Page Detail
+ 
+Label   PackingSlipZPLTemplatePage  Name    PackingSlipZPLTemplatePage
+Namespace Prefix    zkmulti Available for Lightning Experience, Experience Builder sites, and the mobile app    Not Checked
+Require CSRF protection on GET requests Not Checked Description 
+    Created By  Integration User,  8/3/2021, 6:46 AM
+Last Modified By    Integration User,  8/3/2021, 6:50 AM         
+Package Information
+Installed Package   Zenkraft Multi-Carrier Shipping, Tracking & Returns Available in Package Versions   1.71 - 1.108 (Current)
+    
+    
+Visualforce Markup
+
+    
+    
+Version Settings
+
+-->
+
+<apex:page controller="zkmulti.PackingSlipController" contentType="application/zpl"  action="{! doInit }">
+<!-- <apex:page controller="PackingSlipController" contentType="pdf"  action="{! doInit }"> -->
+^XA
+
+^FX FROM section
+^CF0,30
+^FO50,50^FDFROM:^FS
+^CFA,30
+^FO220,50^FD{! box.shipment.zkmulti__Sender_Company__c}^FS
+^FO220,100^FD{! box.shipment.zkmulti__Sender_Street__c}^FS
+^FO220,150^FD{! box.shipment.zkmulti__Sender_City__c} {! box.shipment.zkmulti__Sender_State_Province__c} {! box.shipment.zkmulti__Sender_Zip_Postal_Code__c}^FS
+^FO220,200^FD{! box.shipment.zkmulti__Sender_Country__c}^FS
+^FO50,250^GB700,1,3^FS
+
+^FX To section
+^CF0,30
+^FO50,300^FDTO:^FS
+^CFA,30
+^FO220,300^FD{! box.shipment.zkmulti__Recipient_Name__c}^FS
+^FO220,350^FD{! box.shipment.zkmulti__Recipient_Street__c}^FS
+^FO220,400^FD{! box.shipment.zkmulti__Recipient_City__c} {! box.shipment.zkmulti__Recipient_State_Province__c} {! box.shipment.zkmulti__Recipient_Zip_Postal_Code__c}^FS
+^FO220,450^FD{! box.shipment.zkmulti__Recipient_Country__c}^FS
+^FO50,500^GB700,1,3^FS
+
+^FX Other information
+^CF0,30
+^FO50,550^FDREF#:^FS
+^CFA,30
+^FO220,550^FD{! box.shipment.zkmulti__Reference1_Value__c }^FS
+
+^FX Products
+^CF0,30
+^FO650,600^FDQuantity^FS
+^FO50,600^FDDescription^FS
+^FO50,650^GB700,1,3^FS
+^CFA,30
+
+<apex:variable var="pageBreakerMessage" value="^FO300,1150^FD{! box.boxNumberString }^FS" />
+<apex:variable var="pageItemCount" value="{!7}" />
+<apex:variable var="itemPosition" value="{!700}" />
+<apex:variable var="itemIndex" value="{!1}" />
+<apex:variable var="totalItems" value="{!0}" />
+<apex:repeat value="{! box.items }" var="product">
+    ^FO50,{! itemPosition }^FD{! product.item.zkmulti__Description__c }^FS
+    ^FO650,{! itemPosition }^FD{! product.item.zkmulti__Quantity__c }^FS
+    {! IF(MOD(itemIndex, pageItemCount) ==  0, '^CF0,30', null)}
+    {! IF(MOD(itemIndex, pageItemCount) ==  0, pageBreakerMessage, null)}
+    {! IF(MOD(itemIndex, pageItemCount) ==  0, '^XZ^XA', null)}
+    {! IF(MOD(itemIndex, pageItemCount) ==  0, '^CF0,30', null)}
+    {! IF(MOD(itemIndex, pageItemCount) ==  0, '^FO650,50^FDDescription^FS', null)}
+    {! IF(MOD(itemIndex, pageItemCount) ==  0, '^FO50,50^FDQuantity^FS', null)}
+    {! IF(MOD(itemIndex, pageItemCount) ==  0, '^FO50,100^GB700,1,3^FS', null)}
+    {! IF(MOD(itemIndex, pageItemCount) ==  0, '^CFA,30', null)}
+    <apex:variable var="itemPosition" value="{!100}" rendered="{! MOD(itemIndex, pageItemCount) ==  0 }"/>  
+    <apex:variable var="itemIndex" value="{!0}" rendered="{! itemIndex == pageItemCount }"/>    
+    <apex:variable var="pageItemCount" value="{!15}" rendered="{! itemIndex == 0 }"/>
+    <apex:variable var="itemPosition" value="{!itemPosition + 50}" />
+    <apex:variable var="itemIndex" value="{!itemIndex + 1}" />
+    <apex:variable var="totalItems" value="{!totalItems + product.item.zkmulti__Quantity__c}" />
+</apex:repeat>
+
+^CF0,30
+^FO50,1050^GB700,1,3^FS
+^FO50,1075^FDTotal Items^FS
+^FO650,1075^FD{! totalItems }^FS
+
+
+^CF0,30
+^FO300,1150^FD{! pageBreakerMessage }^FS
+
+^XZ
+</apex:page>

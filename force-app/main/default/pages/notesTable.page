@@ -1,0 +1,90 @@
+<apex:page controller="NotesTableController" showHeader="false" applyBodyTag="false" renderAs="pdf">
+    <head>
+        <style type="text/css" media="print">
+            @page {
+                size: 14in 13in;
+                margin-bottom: 20%;
+                margin-right: 5%;
+                margin-left: 5%;
+                margin-top: 10%;
+            }
+            style {        
+                border:0.8px solid black;
+            }
+
+            th {
+                border:0.8px solid black;
+            }
+        </style>
+    </head>
+
+    <body>
+
+   
+
+    <!-- <apex:repeat value="{!thousandBlocks}" var="block">
+        <table style="width:100%; table-layout: fixed; border-collapse: collapse;">
+            <tr>
+                <th style="width:15%; border: 1px solid black;">Title</th>
+                <th style="width:50%; border: 1px solid black;">Body</th>
+                <th style="width:15%; border: 1px solid black;">Owner</th>
+                <th style="width:10%; border: 1px solid black;">Created Date</th>
+                <th style="width:10%; border: 1px solid black;">Created By</th>
+            </tr>
+            <apex:repeat value="{!block.notes}" var="note">
+                <tr>
+                    <td style="border: 1px solid black;"><div style="overflow-wrap: break-word; padding:5px;">{!note.title}</div></td>
+                    <td style="border: 1px solid black;"><div style="overflow-wrap: break-word; padding:5px;">{!note.body}</div></td>
+                    <td style="border: 1px solid black;"><div style="overflow-wrap: break-word; padding:5px;">{!note.ownerName}</div></td>
+                    <td style="border: 1px solid black;"><div style="overflow-wrap: break-word; padding:5px;">{!DAY(note.createdDate)}/{!MONTH(note.createdDate)}/{!YEAR(note.createdDate)}</div></td>
+                    <td style="border: 1px solid black;"><div style="overflow-wrap: break-word; padding:5px;">{!note.userName}</div></td>
+                </tr>
+            </apex:repeat>
+        </table>
+    </apex:repeat> -->
+
+    <apex:repeat value="{!thousandBlocks}" var="block">
+        <table style="width:100%; table-layout: fixed; border-collapse: collapse;">
+            <tr>
+                <th style="width:15%; border: 1px solid black;">Title</th>
+                <th style="width:50%; border: 1px solid black;">Body1</th>
+                <th style="width:15%; border: 1px solid black;">Owner</th>
+                <th style="width:10%; border: 1px solid black;">Created Date</th>
+                <th style="width:10%; border: 1px solid black;">Created By</th>
+            </tr>
+            <apex:repeat value="{!block.notes}" var="note">
+                <tr>
+                    <td style="border: 1px solid black; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><apex:outputText value="{!note.title}" escape="false"/></td>
+                    <td style="border: 1px solid black; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><apex:outputText value="{!note.body}" escape="false"/></td>
+                    <td style="border: 1px solid black; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><apex:outputText value="{!note.ownerName}" escape="false"/></td>
+                    <td style="border: 1px solid black; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><apex:outputText value="{!DAY(note.createdDate)}/{!MONTH(note.createdDate)}/{!YEAR(note.createdDate)}" escape="false"/></td>
+                    <td style="border: 1px solid black; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><apex:outputText value="{!note.userName}" escape="false"/></td>
+                </tr>
+            </apex:repeat>
+        </table>
+    </apex:repeat>
+
+
+        <!-- <apex:pageBlock > -->
+
+
+            <!-- <apex:repeat value="{!thousandBlocks}" var="block">
+                <apex:pageBlockTable value="{!block.notes}" var="note" styleClass="style" >
+                    <apex:column width="15%" style="border:1px solid black; padding: 10px; word-wrap:break-word; word-break:break-all;" value="{!note.title}" headerValue="Title"></apex:column>
+                    <apex:column width="50%" style="border:1px solid black; padding: 10px; word-wrap:break-word; word-break:break-all;" value="{!note.body}" headerValue="Body"></apex:column>
+                    <apex:column width="15%" style="border:1px solid black; padding: 10px; word-wrap:break-word; word-break:break-all;" value="{!note.ownerName}" headerValue="Owner"></apex:column>
+                    <apex:column width="10%" style="border:1px solid black; padding: 10px; word-wrap:break-word; word-break:break-all;" headerValue="Created Date">{!DAY(note.createdDate)}/{!MONTH(note.createdDate)}/{!YEAR(note.createdDate)}</apex:column>
+                    <apex:column width="10%" style="border:1px solid black; padding: 10px; word-wrap:break-word; word-break:break-all;" value="{!note.userName}" headerValue="Created By"></apex:column>
+                </apex:pageBlockTable>
+            </apex:repeat> -->
+
+            <!-- <apex:pageBlockTable value="{!notes}" var="note" styleClass="style">
+                <apex:column width="15%" style="border:1px solid black; padding: 10px;" value="{!note.title}" headerValue="Title"></apex:column>
+                <apex:column width="50%" style="border:1px solid black; padding: 10px;" value="{!note.body}" headerValue="Body"></apex:column>
+                <apex:column width="15%" style="border:1px solid black; padding: 10px;" value="{!note.ownerName}" headerValue="Owner"></apex:column>
+                <apex:column width="10%" style="border:1px solid black; padding: 10px;" headerValue="Created Date">{!DAY(note.createdDate)}/{!MONTH(note.createdDate)}/{!YEAR(note.createdDate)}</apex:column>
+                <apex:column width="10%" style="border:1px solid black; padding: 10px;" value="{!note.userName}" headerValue="Created By"></apex:column>
+            </apex:pageBlockTable> -->
+        <!-- </apex:pageBlock> -->
+    </body>
+</apex:page>
