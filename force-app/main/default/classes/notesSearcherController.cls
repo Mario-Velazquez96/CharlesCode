@@ -6,59 +6,16 @@ public without sharing class notesSearcherController {
     Public static Set<Id> accountContentNotesIds = new Set<Id>();
 
     @AuraEnabled (cacheable=true)
-    public static List<WrapperNotes> getNotes(String accountId,Date startDate, Date endDate){
+    public static List<WrapperNotes> getNotes(String accountId){
         try {
-            String accountNotesQuery = 'SELECT Id, Body, Title,CreatedDate,CreatedBy.Name FROM Notes';
-            String accountQuery;
-            String filters;
-
-            System.debug(startDate);
-            System.debug(endDate);
-
-            if (startDate != null) {
-                Integer d = startDate.day();
-                Integer mo = startDate.month();
-                Integer yr = startDate.year();
-
-                DateTime DT = DateTime.newInstance(yr, mo, d,00,00,00);
-                String formattedDatetime = DT.format('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'');
-
-                filters = 'CreatedDate >= ' + formattedDatetime;
-            }
-            if (endDate != null) {
-                Integer d = endDate.day();
-                Integer mo = endDate.month();
-                Integer yr = endDate.year();
-
-                DateTime DT = DateTime.newInstance(yr, mo, d);
-                String formattedDatetime = DT.format('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'');
-                if (String.isNotBlank(filters)){
-                    filters +=  ' AND CreatedDate <= ' + formattedDatetime;
-                    filters = '('+filters+')';
-                } else {
-                    filters = 'CreatedDate <= ' + formattedDatetime;
-                }
-            }
-
-            System.debug('Notes'+filters);
- 
-            if (String.isNotBlank(filters)) {
-                 accountNotesQuery = 'SELECT Id, Body, Title,CreatedDate,CreatedBy.Name FROM Notes WHERE ' + filters;
-            }
-
-            accountQuery = 'SELECT Id, Name, (' + accountNotesQuery + '),(SELECT Id, Name FROM Contacts) FROM Account WHERE Id = :accountId LIMIT 1';
-
-            System.debug(accountQuery);
-            List<Account> accounts = Database.query(accountQuery);
-
-            System.debug(accounts);
+            List<Account> accounts = [SELECT Id, Name, (SELECT Id, Body, Title,CreatedDate,CreatedBy.Name FROM Notes),(SELECT Id, Name FROM Contacts) FROM Account WHERE Id = :accountId LIMIT 1];
             
             if (accounts.size() > 0) {
                 getRelatedAccountNotes(accounts);
-                getRelatedAccountContentNotes(accounts,accountId,filters);
+                getRelatedAccountContentNotes(accounts,accountId);
                 if(contactIds.size() > 0){
-                    getRelatedContactNotes(filters);
-                    getRelatedContactContentNotes(filters);
+                    getRelatedContactNotes();
+                    getRelatedContactContentNotes();
                 }
 
                 //sort notes by date
@@ -86,18 +43,8 @@ public without sharing class notesSearcherController {
         }
     }
 
-    public static void getRelatedContactNotes(String filters){
-        String contactNotesQuery = 'SELECT Id, Body, Title,CreatedDate,CreatedBy.Name FROM Notes';
-        String contactQuery;
-
-        if (String.isNotBlank(filters)) {
-            contactNotesQuery = 'SELECT Id, Body, Title,CreatedDate,CreatedBy.Name FROM Notes WHERE ' + filters;
-        }
-
-        contactQuery = 'SELECT Id, Name, (' + contactNotesQuery + ') FROM Contact WHERE Id IN :contactIds';
-        System.debug('contactQuery notes ' +contactQuery);
-        List<Contact> contactsNotes = Database.query(contactQuery);
-        System.debug('contactsNotes notes ' +contactsNotes.size());
+    public static void getRelatedContactNotes(){
+        List<Contact> contactsNotes = [SELECT Id, Name, (SELECT Id, Body, Title,CreatedDate,CreatedBy.Name FROM Notes) FROM Contact WHERE Id IN :contactIds];
 
         for (Contact con : contactsNotes) {
             for(Note n : con.Notes){
@@ -106,54 +53,33 @@ public without sharing class notesSearcherController {
         }
     }
 
-    public static void getRelatedAccountContentNotes(List<Account> accounts,String accountid, String filters){
-        String accountLinksQuery = 'SELECT Id, LinkedEntityId,ContentDocumentId,LinkedEntity.Name FROM ContentDocumentLink WHERE ContentDocument.FileType = \'SNOTE\' AND LinkedEntityId =:accountid';
-
-        System.debug('accountLinks'+accountLinksQuery);
-        List<ContentDocumentLink> accountLinks = Database.query(accountLinksQuery);
+    public static void getRelatedAccountContentNotes(List<Account> accounts,String accountid){
+        List<ContentDocumentLink> accountLinks = [SELECT Id, LinkedEntityId,ContentDocumentId,LinkedEntity.Name
+                                                    FROM ContentDocumentLink 
+                                                    WHERE ContentDocument.FileType = 'SNOTE' AND LinkedEntityId =:accountid];
 
         for (ContentDocumentLink link :accountLinks){
             accountContentNotesIds.add(link.ContentDocumentId);
         }
 
         if(accountContentNotesIds.size() > 0){
-            String contentNoteQuery = 'SELECT Id,Content,Title,CreatedDate,CreatedBy.Name FROM ContentNote WHERE Id IN :accountContentNotesIds';
-
-            if (String.isNotBlank(filters)) {
-                contentNoteQuery = contentNoteQuery + ' AND ' + filters;
-            }
-            System.debug('contentNoteQuery ACCSS ' + contentNoteQuery );
-
-            List<ContentNote> notes = Database.query(contentNoteQuery);
-
-            System.debug('notesAccs ' + notes.size() );
-            for(ContentNote accNotes : notes){
+            for(ContentNote accNotes : [SELECT Id,Content,Title,CreatedDate,CreatedBy.Name FROM ContentNote WHERE Id IN :accountContentNotesIds]){
                 addWrapperFromContentNote(accNotes,'Account',accounts[0].Name);    
             }
         } 
     }
 
-    public static void getRelatedContactContentNotes(String filters){
-        String contactLinksQuery = 'SELECT Id, LinkedEntityId,ContentDocumentId,LinkedEntity.Name FROM ContentDocumentLink WHERE ContentDocument.FileType = \'SNOTE\' AND LinkedEntityId IN :contactIds';
-
-        List<ContentDocumentLink> contactLinks = Database.query(contactLinksQuery);
+    public static void getRelatedContactContentNotes(){
+        List<ContentDocumentLink> contactLinks = [SELECT Id, LinkedEntityId,ContentDocumentId,LinkedEntity.Name
+                                                    FROM ContentDocumentLink 
+                                                    WHERE ContentDocument.FileType = 'SNOTE' AND LinkedEntityId IN :contactIds];
 
         for (ContentDocumentLink link : contactLinks){
             documentLinkContactsMap.put(link.ContentDocumentId,link.LinkedEntity.Name);
         }
 
         if (contactLinks.size() > 0) {
-            Set<String> linksIds = documentLinkContactsMap.keySet();
-            String contentNoteQuery = 'SELECT Id,Content,Title,CreatedDate,CreatedBy.Name FROM ContentNote WHERE Id IN :linksIds';
-
-            if (String.isNotBlank(filters)) {
-                contentNoteQuery = contentNoteQuery + ' AND ' + filters;
-            }
-            System.debug('error 142' + contentNoteQuery);
-            List<ContentNote> notes = Database.query(contentNoteQuery);
-            System.debug('notesConss ' + notes.size() );
-
-            for(ContentNote contNotes : notes){
+            for(ContentNote contNotes : [SELECT Id,Content,Title,CreatedDate,CreatedBy.Name FROM ContentNote WHERE Id IN :documentLinkContactsMap.keySet()]){
                 addWrapperFromContentNote(contNotes, 'Contact', documentLinkContactsMap.get(contNotes.Id));
             }
         }   
@@ -187,19 +113,9 @@ public without sharing class notesSearcherController {
 
     //add extra things
     @AuraEnabled (cacheable=true)
-    public static List<String> getPrint(String accountId,Date startDate, Date endDate){    
+    public static List<String> getPrint(String accountId){
         List <String> pageStrings = new List<String>();
-
-        String pdfURL = '/apex/notesTable?school=' + accountId;
-        if (startDate != null) {
-            String startDateValue = EncodingUtil.urlEncode(startDate.format(), 'UTF-8');
-            pdfURL += '&startDate=' + startDateValue;
-        }
-        if (endDate != null) {
-            String endDateValue = EncodingUtil.urlEncode(endDate.format(), 'UTF-8');
-            pdfURL += '&endDate=' + endDateValue;
-        }
-        PageReference pdfPage = new Pagereference(pdfURL);
+        PageReference pdfPage = new Pagereference('/apex/notesTable?school=' + accountId);
         Blob pdfBlob = pdfPage.getContent();
         String downloadURL = EncodingUtil.base64Encode(pdfBlob);
 

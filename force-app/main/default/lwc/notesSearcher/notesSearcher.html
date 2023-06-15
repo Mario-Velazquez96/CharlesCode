@@ -8,11 +8,11 @@
             <lightning-layout horizontal-align="stretch" multiple-rows="true">
                 <template if:true={showCustomLookup}>   
                     <lightning-layout-item size="12">
-                        <c-notes-searcher-lookup obj-name="Account" search-placeholder="Search Accounts" icon-name="standard:account" onaccountsearch={searchNotes} onremoveaccount={accountRemoved} account-id={recordId} account-name={accountName} > </c-notes-searcher-lookup>
+                        <c-notes-searcher-lookup obj-name="Account" search-placeholder="Search Accounts" icon-name="standard:account" onaccountsearch={searchNotes} onremoveaccount={accountRemoved}> </c-notes-searcher-lookup>
                     </lightning-layout-item>
                 </template>
                 
-                <!-- <template if:false={showCustomLookup}>
+                <template if:false={showCustomLookup}>
                     <lightning-layout-item size="12">
                         <div id="lookup-pill" class="slds-pill-container">
                             <lightning-pill class="pillSize" label={name} name={name} onremove={handleRemovePill} href={href}>
@@ -20,7 +20,7 @@
                             </lightning-pill>
                         </div>
                     </lightning-layout-item>
-                </template> -->
+                </template>
 
                 <lightning-layout-item size="12">
                     <div class="table-container">
