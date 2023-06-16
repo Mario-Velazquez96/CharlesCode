@@ -10,51 +10,49 @@ import downloadjs from '@salesforce/resourceUrl/downloadjs';
 
 export default class NotesSearcher extends LightningElement {
     @api recordId
-    
-    showCustomLookup = true;
+    accountName
+    showCustomLookup;
     showSpinner;
     @track notesList;
     @track objectId;
     showDataTable = false;
+    record;
+    startDate;
+    endDate;
 
     strFile;
     
     @wire(getRecord, { recordId: '$recordId', fields: [NAME_FIELD] })
-    account;
+    setAccountData (data, error){
+        if(data){
+            this.record = data;
+            this.accountName = getFieldValue(this.record.data, NAME_FIELD);
+            console.log('accountName',this.accountName);
+            if (!!this.accountName) {
+                this.showCustomLookup = true;
+            }
+        }
+        if (error){
+            console.log('error', error)
+        }
+    };
 
-     get name() {
-        return getFieldValue(this.account.data, NAME_FIELD);
-    }
+    //  get name() {
+    //     return getFieldValue(this.account.data, NAME_FIELD);
+    // }
 
     renderedCallback() {
         loadScript(this, downloadjs);
     }
 
-    connectedCallback() {
-        if(this.recordId){
-            this.showCustomLookup = false;
-            this.objectId = this.recordId;
-            getNotes({accountId: this.objectId})
-            .then(result => {
-                let notesList = [];  
-                result.forEach(notes => {                            
-                    notesList.push(notes);
-                });
-                this.notesList = [...notesList]; 
-
-                this.showDataTable = true;
-                console.log(JSON.stringify(this.notesList))
-            })
-            .catch(error => console.error(error))
-            .finally(() => this.showSpinner = false);
-
-        }
-    }
-
     searchNotes(event){
+        this.showDataTable = false;
         this.showSpinner = true;
-        this.objectId = event.detail;
-        getNotes({accountId: this.objectId})
+        this.objectId = event.detail.selectedId;
+        this.startDate = event.detail.startDate;
+        this.endDate = event.detail.endDate;
+        //let filters = event.detail.queryFilter;
+        getNotes({accountId: this.objectId, startDate:this.startDate, endDate:this.endDate})
         .then(result => {
             let notesList = [];  
             result.forEach(notes => {                            
@@ -81,7 +79,7 @@ export default class NotesSearcher extends LightningElement {
     // }
 
     downloadPDF(event) {
-        getPDFprint({accountId: this.recordId}).then(response => {
+        getPDFprint({accountId: this.recordId, startDate: this.startDate, endDate: this.endDate}).then(response => {
             this.strFile = "data:application/pdf;base64,"+ response[0];
             window.open(response[1]);
         })

@@ -51,8 +51,10 @@ public class notesSearcher_TEST {
     @isTest
     public static void testGetNotes(){
         String accountId = [SELECT Id FROM Account WHERE Name = 'accountTest'].Id;
+        Date startDate = date.today();
+        Date endDate;
         test.startTest();
-        List<notesSearcherController.WrapperNotes> notes = notesSearcherController.getNotes(accountId);
+        List<notesSearcherController.WrapperNotes> notes = notesSearcherController.getNotes(accountId,startDate,endDate);
         test.stopTest();
         System.assertEquals(notes.size(), 8, 'Wrong number of notes');
     }

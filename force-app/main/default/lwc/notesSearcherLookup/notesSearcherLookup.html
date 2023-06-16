@@ -12,7 +12,17 @@
                                     </lightning-pill>
                                 </div>
                                 <div>
-                                    <lightning-button variant="brand-outline" label="Search" title="Search" onclick={handleSearchClick} class="slds-m-left_x-small"></lightning-button>
+                                    <lightning-layout multiple-rows="true">
+                                        <lightning-layout-item size="2" class="slds-p-around_x-small">
+                                            <lightning-input type="date" label="Enter a start date" value={startDate} onchange={handleChangeStartValue}></lightning-input>
+                                        </lightning-layout-item>
+                                        <lightning-layout-item size="2" class="slds-p-around_x-small">
+                                            <lightning-input type="date"  label="Enter an end date" value={endDate} onchange={handleChangeEndValue}></lightning-input>
+                                        </lightning-layout-item>
+                                        <lightning-layout-item size="1" class="slds-p-around_x-small">
+                                            <lightning-button variant="brand-outline" label="Search" title="Search" onclick={handleSearchClick} class=" slds-m-top_x-small slds-align_absolute-center"></lightning-button>
+                                        </lightning-layout-item>
+                                    </lightning-layout>
                                 </div>
                                 
                             </template>

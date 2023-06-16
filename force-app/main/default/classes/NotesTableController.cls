@@ -1,12 +1,29 @@
 public without sharing class NotesTableController {
-    String accountId = System.currentPageReference().getParameters().get('school');
-    List<notesSearcherController.WrapperNotes> notes = notesSearcherController.getNotes(accountId);
+    
+    // String accountId = System.currentPageReference().getParameters().get('school');
+    // String stringStartDate = System.currentPageReference().getParameters().get('startDate');
+    // String stringEndDate = System.currentPageReference().getParameters().get('endDate');
+
+
+    
+    Date startDate;
+    Date endDate;
+
+    List<notesSearcherController.WrapperNotes> notes ;
     private limitWrapper[] thousandBlocks = new limitWrapper[]{};
     private final integer listLimit;
 
     public NotesTableController()
     {
+
+        String accountId = System.currentPageReference().getParameters().get('school');
+        String stringStartDate = System.currentPageReference().getParameters().get('startDate');
+        String stringEndDate = System.currentPageReference().getParameters().get('endDate');
+        
+        startDate = String.isNotBlank(stringStartDate)? Date.parse(stringStartDate):null;
+        endDate = String.isNotBlank(stringEndDate)? Date.parse(stringEndDate):null;
         listLimit = 1000;
+        notes = notesSearcherController.getNotes(accountId,startDate,endDate);
     }
 
     // public List<notesSearcherController.WrapperNotes> getNotes() {
