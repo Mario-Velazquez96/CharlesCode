@@ -57,7 +57,7 @@
                     <td style="border: 1px solid black;"><div style="overflow-wrap: break-word; padding:5px;">{!note.title}</div></td>
                     <td style="border: 1px solid black;"><div style="overflow-wrap: break-word; padding:5px;">{!note.body}</div></td>
                     <td style="border: 1px solid black;"><div style="overflow-wrap: break-word; padding:5px;">{!note.ownerName}</div></td>
-                    <td style="border: 1px solid black;"><div style="overflow-wrap: break-word; padding:5px;">{!DAY(note.createdDate)}/{!MONTH(note.createdDate)}/{!YEAR(note.createdDate)}</div></td>
+                    <td style="border: 1px solid black;"><div style="overflow-wrap: break-word; padding:5px;">{!MONTH(note.createdDate)}/{!DAY(note.createdDate)}/{!YEAR(note.createdDate)}</div></td>
                     <td style="border: 1px solid black;"><div style="overflow-wrap: break-word; padding:5px;">{!note.userName}</div></td>
                 </tr>
             </apex:repeat>
