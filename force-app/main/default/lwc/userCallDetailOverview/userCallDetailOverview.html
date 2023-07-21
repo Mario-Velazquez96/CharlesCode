@@ -1,0 +1,16 @@
+<template>
+  <lightning-card title="User call detail overview">
+    <lightning-layout>
+      <lightning-layout-item size="6"
+        ><c-user-call-look-up
+          obj-name="User"
+          search-placeholder="Search Users"
+          icon-name="standard:user"
+          onrecordsearch={searchCalls}
+          onrecordremove={cleanCalls}
+        >
+        </c-user-call-look-up>
+      </lightning-layout-item>
+    </lightning-layout>
+  </lightning-card>
+</template>

@@ -1,7 +1,10 @@
 import { api, LightningElement, track, wire } from 'lwc';
 import lookUp from '@salesforce/apex/notesSearcherLookupController.search';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class NotesSearcherLookup extends LightningElement {
+    @api accountId
+    @api accountName
     @api objName;
     @api iconName;
     @api filter = '';
@@ -12,9 +15,28 @@ export default class NotesSearcherLookup extends LightningElement {
     @track isValueSelected;
     @track blurTimeout;
     searchTerm;
+    startDate;
+    endDate;
+
+    startDateDT;
+    endDateDT;
     //css
     @track boxClass = 'slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-has-focus';
     @track inputClass = '';
+
+
+    connectedCallback(){
+        if(!!this.accountId){
+            this.isValueSelected = true;
+            this.selectedId = this.accountId;
+            this.selectedName = this.accountName;
+        if(this.blurTimeout) {
+            clearTimeout(this.blurTimeout);
+        }
+        this.boxClass = 'slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-has-focus';
+        }
+    }
+    
     @wire(lookUp, {searchTerm : '$searchTerm', myObject : '$objName', filter : '$filter'})
     wiredRecords({ error, data }) {
         if (data) {
@@ -61,11 +83,53 @@ export default class NotesSearcherLookup extends LightningElement {
     }
 
     handleSearchClick() {
+        if (this.startDate >= this.endDate && this.endDate){
+            this.showToast('Start date value cannot be greater than end date value', 'Error', 'error');
+            return;
+        }
         console.log('test', this.selectedId);
+        // let query = this.buildDateQuery('CreatedDate');
         this.dispatchEvent(new CustomEvent('accountsearch', {
-            detail: this.selectedId,
+            detail: {selectedId:this.selectedId, startDate:this.startDate, endDate:this.endDate},
             bubbles: true,
             composed: true
         }));
+    }
+
+    handleChangeStartValue(event){
+        this.startDate = event.target.value;
+    }
+
+    handleChangeEndValue(event){
+        this.endDate = event.target.value;
+    }
+
+    buildDateQuery(fieldName){
+        let objectQueryString;
+
+        if(!!this.startDate){
+            objectQueryString = fieldName + ' >= ' + this.startDate;
+        }
+        if(!!this.endDate){
+            if (!!objectQueryString){
+                objectQueryString +=  ` AND ${fieldName} <= ${this.endDate}`;
+                objectQueryString = `(${objectQueryString})`;
+            } else {
+                objectQueryString = fieldName + ' <= ' + this.endDate;
+
+            }
+        }
+
+        console.log('QUERYSTRING', objectQueryString);
+        return objectQueryString;   
+    }
+
+    showToast(message, title, variant) {
+        const event = new ShowToastEvent({
+            title: title,
+            message: message,
+            variant: variant,
+        });
+        this.dispatchEvent(event);
     }
 }
