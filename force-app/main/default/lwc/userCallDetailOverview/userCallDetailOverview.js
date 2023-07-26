@@ -21,8 +21,8 @@ export default class UserCallDetailOverview extends LightningElement {
   numberOfDaysCalling;
   callsPerEachMarket = {};
   callsPerEachTitle = {};
-  meetingsScheduled;
-  meetingsScheduledForOthers;
+  meetingsScheduledBySelf;
+  meetingsScheduledByOthers;
 
   searchCalls(event) {
     this.loading = true;
@@ -44,6 +44,7 @@ export default class UserCallDetailOverview extends LightningElement {
         this.meetingsDetailsDateRange = data?.meetingsDetailsDateRange;
         this.contactTaskOwners = data?.contactsOwners;
         console.log("contactTaskOwners: ", this.contactTaskOwners);
+        this.getSummaryData();
         this.loading = false;
       })
       .catch((error) => this.showToast("Error", error.body.message, "error"));
@@ -53,6 +54,9 @@ export default class UserCallDetailOverview extends LightningElement {
     this.callTotalAmount = this.callDetailsDateRange.length;
     this.numberOfDaysCalling = this.getNumberOfDaysCalling();
     this.callsPerEachMarket = this.getCallsPerEachMarket();
+    this.callsPerEachTitle = this.getCallsPerEachTitle();
+    this.meetingsScheduledBySelf = this.getMeetingsScheduledBySelf();
+    this.meetingsScheduledByOthers = this.getMeetingsScheduledByOthers();
   }
 
   //Get the number of days calling (not while traveling)
@@ -99,6 +103,51 @@ export default class UserCallDetailOverview extends LightningElement {
     }
     console.log("callsPerEachMarket: ", callsPerEachMarket);
     return callsPerEachMarket;
+  }
+
+  getCallsPerEachTitle() {
+    //iterate through the contactsTaskOwners which is a map of taskId and contacts
+    //if the title is not in the map, add it and have a count of how many call are in each title
+    //if the title is in the map, increment the count
+    let callsPerEachTitle = {};
+    for (let [key, value] of Object.entries(this.contactTaskOwners)) {
+      let title = value.Title;
+      if (title in callsPerEachTitle) {
+        callsPerEachTitle[title] += 1;
+      } else {
+        callsPerEachTitle[title] = 1;
+      }
+    }
+    console.log("callsPerEachTitle: ", callsPerEachTitle);
+    return callsPerEachTitle;
+  }
+
+  getMeetingsScheduledBySelf() {
+    let meetingsScheduledBySelf = 0;
+    for (let i = 0; i < this.meetingsDetailsDateRange.length; i++) {
+      if (
+        this.meetingsDetailsDateRange[i].CreatedById ===
+        this.meetingsDetailsDateRange[i].OwnerId
+      ) {
+        meetingsScheduledBySelf += 1;
+      }
+    }
+    console.log("meetingsScheduledBySelf: ", meetingsScheduledBySelf);
+    return meetingsScheduledBySelf;
+  }
+
+  getMeetingsScheduledByOthers() {
+    let meetingsScheduledByOthers = 0;
+    for (let i = 0; i < this.meetingsDetailsDateRange.length; i++) {
+      if (
+        this.meetingsDetailsDateRange[i].CreatedById !==
+        this.meetingsDetailsDateRange[i].OwnerId
+      ) {
+        meetingsScheduledByOthers += 1;
+      }
+    }
+    console.log("meetingsScheduledByOthers: ", meetingsScheduledByOthers);
+    return meetingsScheduledByOthers;
   }
 
   showToast(title, message, variant) {
