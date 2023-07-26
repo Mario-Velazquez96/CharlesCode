@@ -13,4 +13,10 @@
       </lightning-layout-item>
     </lightning-layout>
   </lightning-card>
+  <template if:true={loading}>
+    <lightning-spinner
+      alternative-text="Loading"
+      size="large"
+    ></lightning-spinner>
+  </template>
 </template>
