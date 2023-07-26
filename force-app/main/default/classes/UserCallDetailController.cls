@@ -66,7 +66,7 @@ public without sharing class UserCallDetailController {
   }
 
   private static List<Task> getTasks(String filter) {
-    String taskQuery = 'SELECT Id, OwnerId, Done_While_Traveling__c, CreatedDate, Owner.Name, Subject, AccountId, Account.Name, WhoId, Who.Name, Who.Title, Priority, CreatedBy.Name FROM Task';
+    String taskQuery = 'SELECT Id, OwnerId, Done_While_Traveling__c, CreatedDate, Owner.Name, Subject, AccountId, Account.Name, WhoId, Who.Name, Who.Title, Priority, CreatedBy.Name, CreatedById FROM Task';
     if (filter != null) {
       taskQuery += ' WHERE ' + filter;
     }
@@ -75,7 +75,7 @@ public without sharing class UserCallDetailController {
   }
 
   private static List<Event> getEvents(String filter) {
-    String eventQuery = 'SELECT Id, OwnerId, Owner.Name, Subject, AccountId, Account.Name, WhoId, Who.Name, CreatedBy.Name FROM Event';
+    String eventQuery = 'SELECT Id, OwnerId, Owner.Name, Subject, AccountId, Account.Name, WhoId, Who.Name, CreatedBy.Name, CreatedById FROM Event';
     if (filter != null) {
       eventQuery += ' WHERE ' + filter;
     }
