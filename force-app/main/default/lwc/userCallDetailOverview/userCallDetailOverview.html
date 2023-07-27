@@ -15,29 +15,135 @@
         <lightning-layout-item size="12" class="slds-p-around_small">
           <div class="card-container">
             <lightning-card title="Summary" icon-name="standard:metrics">
-              <lightning-layout>
-                <lightning-layout-item size="2" class="slds-p-around_small">
+              <lightning-layout multiple-rows="true">
+                <lightning-layout-item size="3" class="slds-p-around_small">
                   <c-metric-container
-                    label="Call Amount"
+                    label="Call amount"
                     description="Date range selected"
                     value={callTotalAmount}
                   ></c-metric-container>
                 </lightning-layout-item>
-                <lightning-layout-item size="2" class="slds-p-around_small">
+                <lightning-layout-item size="3" class="slds-p-around_small">
                   <c-metric-container
-                    label="Scheduled Meetings by Self"
+                    label="Number of days calling"
+                    description="Date range selected"
+                    value={numberOfDaysCalling}
+                  ></c-metric-container>
+                </lightning-layout-item>
+                <lightning-layout-item size="3" class="slds-p-around_small">
+                  <c-metric-container
+                    label="Call this week"
+                    description="This week"
+                    value={callDetailThisWeekSize}
+                  ></c-metric-container>
+                </lightning-layout-item>
+                <lightning-layout-item size="3" class="slds-p-around_small">
+                  <c-metric-container
+                    label="Call last week"
+                    description="Last week"
+                    value={callDetailsLastWeekSize}
+                  ></c-metric-container>
+                </lightning-layout-item>
+                <lightning-layout-item size="3" class="slds-p-around_small">
+                  <c-metric-container
+                    label="Call this month"
+                    description="This Month"
+                    value={callDetailsThisMonthSize}
+                  ></c-metric-container>
+                </lightning-layout-item>
+                <lightning-layout-item size="3" class="slds-p-around_small">
+                  <c-metric-container
+                    label="Call last month"
+                    description="Last Month"
+                    value={callDetailsLastMonthSize}
+                  ></c-metric-container>
+                </lightning-layout-item>
+                <lightning-layout-item size="3" class="slds-p-around_small">
+                  <c-metric-container
+                    label="Meetings amount"
+                    description="Date range selected"
+                    value={meetingsDetailsDateRangeSize}
+                  ></c-metric-container>
+                </lightning-layout-item>
+                <lightning-layout-item size="3" class="slds-p-around_small">
+                  <c-metric-container
+                    label="Scheduled meetings by self"
                     description="Date range selected"
                     value={meetingsScheduledBySelf}
                   ></c-metric-container>
                 </lightning-layout-item>
-                <lightning-layout-item size="2" class="slds-p-around_small">
+                <lightning-layout-item size="3" class="slds-p-around_small">
                   <c-metric-container
                     label-font-size=".8rem"
-                    label="Scheduled Meetings by Others"
+                    label="Scheduled meetings by others"
                     description="Date range selected"
                     value={meetingsScheduledByOthers}
                   ></c-metric-container>
                 </lightning-layout-item>
+              </lightning-layout>
+            </lightning-card>
+          </div>
+        </lightning-layout-item>
+
+        <lightning-layout-item
+          size="12"
+          class="slds-p-horizontal_small slds-p-bottom_small"
+        >
+          <div class="card-container">
+            <lightning-card title="Markets" icon-name="standard:metrics">
+              <lightning-layout multiple-rows="true">
+                <template lwc:if={isThereMarkets}>
+                  <template for:each={marketData} for:item="market">
+                    <lightning-layout-item
+                      key={market.key}
+                      size="2"
+                      class="slds-p-around_small"
+                    >
+                      <c-metric-container
+                        label={market.key}
+                        description=" "
+                        value={market.value}
+                      ></c-metric-container>
+                    </lightning-layout-item>
+                  </template>
+                </template>
+                <template lwc:elseif={isThereNoMarkets}>
+                  <lightning-layout-item size="12" class="slds-p-around_small">
+                    <p>No markets found</p>
+                  </lightning-layout-item>
+                </template>
+              </lightning-layout>
+            </lightning-card>
+          </div>
+        </lightning-layout-item>
+
+        <lightning-layout-item
+          size="12"
+          class="slds-p-horizontal_small slds-p-bottom_small"
+        >
+          <div class="card-container">
+            <lightning-card title="Titles" icon-name="standard:metrics">
+              <lightning-layout multiple-rows="true">
+                <template lwc:if={isThereTitles}>
+                  <template for:each={titleData} for:item="title">
+                    <lightning-layout-item
+                      key={title.key}
+                      size="2"
+                      class="slds-p-around_small"
+                    >
+                      <c-metric-container
+                        label={title.key}
+                        description=" "
+                        value={title.value}
+                      ></c-metric-container>
+                    </lightning-layout-item>
+                  </template>
+                </template>
+                <template lwc:elseif={isThereNoTitles}>
+                  <lightning-layout-item size="12" class="slds-p-around_small">
+                    <p>No titles found</p>
+                  </lightning-layout-item>
+                </template>
               </lightning-layout>
             </lightning-card>
           </div>

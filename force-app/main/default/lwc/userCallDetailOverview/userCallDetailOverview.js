@@ -17,13 +17,13 @@ export default class UserCallDetailOverview extends LightningElement {
   meetingsDetailsDateRange = [];
   contactTaskOwners = {};
 
-  callTotalAmount;
+  callTotalAmount = 0;
   //conversationTotalAmount;
-  numberOfDaysCalling;
+  numberOfDaysCalling = 0;
   callsPerEachMarket = {};
   callsPerEachTitle = {};
-  meetingsScheduledBySelf;
-  meetingsScheduledByOthers;
+  meetingsScheduledBySelf = 0;
+  meetingsScheduledByOthers = 0;
 
   searchCalls(event) {
     this.loading = true;
@@ -159,6 +159,56 @@ export default class UserCallDetailOverview extends LightningElement {
       variant: variant
     });
     this.dispatchEvent(event);
+  }
+
+  get callDetailThisWeekSize() {
+    return this.callDetailsThisWeek.length;
+  }
+
+  get callDetailsLastWeekSize() {
+    return this.callDetailsLastWeek.length;
+  }
+
+  get callDetailsThisMonthSize() {
+    return this.callDetailsThisMonth.length;
+  }
+
+  get callDetailsLastMonthSize() {
+    return this.callDetailsLastMonth.length;
+  }
+
+  get meetingsDetailsDateRangeSize() {
+    return this.meetingsDetailsDateRange.length;
+  }
+
+  get isThereMarkets() {
+    return Object.keys(this.callsPerEachMarket).length > 0;
+  }
+
+  get isThereNoMarkets() {
+    return Object.keys(this.callsPerEachMarket).length <= 0;
+  }
+
+  get marketData() {
+    return Object.entries(this.callsPerEachMarket).map(([key, value]) => ({
+      key,
+      value
+    }));
+  }
+
+  get isThereTitles() {
+    return Object.keys(this.callsPerEachTitle).length > 0;
+  }
+
+  get isThereNoTitles() {
+    return Object.keys(this.callsPerEachTitle).length <= 0;
+  }
+
+  get titleData() {
+    return Object.entries(this.callsPerEachTitle).map(([key, value]) => ({
+      key,
+      value
+    }));
   }
 }
 
