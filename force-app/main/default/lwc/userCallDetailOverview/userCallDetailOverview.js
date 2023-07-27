@@ -6,6 +6,7 @@ export default class UserCallDetailOverview extends LightningElement {
   startDate;
   endDate;
   showSpinner;
+  showSummary = false;
   loading = false;
 
   callDetailsThisWeek = [];
@@ -46,6 +47,7 @@ export default class UserCallDetailOverview extends LightningElement {
         console.log("contactTaskOwners: ", this.contactTaskOwners);
         this.getSummaryData();
         this.loading = false;
+        this.showSummary = true;
       })
       .catch((error) => this.showToast("Error", error.body.message, "error"));
   }

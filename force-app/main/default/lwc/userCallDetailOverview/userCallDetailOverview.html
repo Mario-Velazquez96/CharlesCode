@@ -1,7 +1,7 @@
 <template>
   <lightning-card title="User call detail overview">
-    <lightning-layout>
-      <lightning-layout-item size="6"
+    <lightning-layout multiple-rows="true">
+      <lightning-layout-item size="8"
         ><c-user-call-look-up
           obj-name="User"
           search-placeholder="Search Users"
@@ -11,6 +11,38 @@
         >
         </c-user-call-look-up>
       </lightning-layout-item>
+      <template if:true={showSummary}>
+        <lightning-layout-item size="12" class="slds-p-around_small">
+          <div class="card-container">
+            <lightning-card title="Summary" icon-name="standard:metrics">
+              <lightning-layout>
+                <lightning-layout-item size="2" class="slds-p-around_small">
+                  <c-metric-container
+                    label="Call Amount"
+                    description="Date range selected"
+                    value={callTotalAmount}
+                  ></c-metric-container>
+                </lightning-layout-item>
+                <lightning-layout-item size="2" class="slds-p-around_small">
+                  <c-metric-container
+                    label="Scheduled Meetings by Self"
+                    description="Date range selected"
+                    value={meetingsScheduledBySelf}
+                  ></c-metric-container>
+                </lightning-layout-item>
+                <lightning-layout-item size="2" class="slds-p-around_small">
+                  <c-metric-container
+                    label-font-size=".8rem"
+                    label="Scheduled Meetings by Others"
+                    description="Date range selected"
+                    value={meetingsScheduledByOthers}
+                  ></c-metric-container>
+                </lightning-layout-item>
+              </lightning-layout>
+            </lightning-card>
+          </div>
+        </lightning-layout-item>
+      </template>
     </lightning-layout>
   </lightning-card>
   <template if:true={loading}>
