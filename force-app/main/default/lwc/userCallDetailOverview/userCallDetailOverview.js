@@ -46,10 +46,32 @@ export default class UserCallDetailOverview extends LightningElement {
         this.contactTaskOwners = data?.contactsOwners;
         console.log("contactTaskOwners: ", this.contactTaskOwners);
         this.getSummaryData();
+        this.addLinksToCalls();
+        this.addLinksToMeetings();
         this.loading = false;
         this.showSummary = true;
       })
       .catch((error) => this.showToast("Error", error.body.message, "error"));
+  }
+
+  addLinksToCalls() {
+    let callDetails = this.callDetailsDateRange;
+    for (let i = 0; i < callDetails.length; i++) {
+      let callId = callDetails[i].Id;
+      let callUrl = "/" + callId;
+      callDetails[i].callUrl = callUrl;
+    }
+    this.callDetailsDateRange = callDetails;
+  }
+
+  addLinksToMeetings() {
+    let meetingsDetails = this.meetingsDetailsDateRange;
+    for (let i = 0; i < meetingsDetails.length; i++) {
+      let meetingId = meetingsDetails[i].Id;
+      let meetingUrl = "/" + meetingId;
+      meetingsDetails[i].meetingUrl = meetingUrl;
+    }
+    this.meetingsDetailsDateRange = meetingsDetails;
   }
 
   getSummaryData() {
