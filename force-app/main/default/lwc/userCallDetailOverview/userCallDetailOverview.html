@@ -1,5 +1,5 @@
 <template>
-  <lightning-card title="User call detail overview">
+  <lightning-card>
     <lightning-layout multiple-rows="true">
       <lightning-layout-item size="8"
         ><c-user-call-look-up
@@ -166,13 +166,15 @@
                       Calls Details
                     </h3>
                     <template lwc:if={isThereCalls}>
-                      <c-user-call-data-table
-                        record-list={callDetailsDateRange}
-                        columns={taskColumns}
-                        sorted-by="CreatedDate"
-                        sort-direction="desc"
-                      >
-                      </c-user-call-data-table>
+                      <div class="datatable-container">
+                        <c-user-call-data-table
+                          record-list={callDetailsDateRange}
+                          columns={taskColumns}
+                          sorted-by="CreatedDate"
+                          sort-direction="desc"
+                        >
+                        </c-user-call-data-table>
+                      </div>
                     </template>
                     <template lwc:elseif={isThereNoCalls}>
                       <p>No calls found</p>
@@ -189,13 +191,15 @@
                       Meetings Details
                     </h3>
                     <template lwc:if={isThereMeetings}>
-                      <c-user-call-data-table
-                        record-list={meetingsDetailsDateRange}
-                        columns={meetingColumns}
-                        sorted-by="CreatedDate"
-                        sort-direction="desc"
-                      >
-                      </c-user-call-data-table>
+                      <div class="datatable-container">
+                        <c-user-call-data-table
+                          record-list={meetingsDetailsDateRange}
+                          columns={meetingColumns}
+                          sorted-by="CreatedDate"
+                          sort-direction="desc"
+                        >
+                        </c-user-call-data-table>
+                      </div>
                     </template>
                     <template lwc:elseif={isThereNoMeetings}>
                       <p>No meetings found</p>
