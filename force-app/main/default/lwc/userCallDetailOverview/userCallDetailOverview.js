@@ -27,8 +27,28 @@ const TASKCOLUMNS = [
   { label: "Created By Name", fieldName: "CreatedByName" }
 ];
 
+const MEETINGCOLUMNS = [
+  {
+    label: "Subject",
+    fieldName: "MeetingUrl",
+    type: "url",
+    typeAttributes: { label: { fieldName: "Subject" }, target: "_blank" }
+  },
+  {
+    label: "Created Date",
+    fieldName: "CreatedDate",
+    type: "date",
+    sortable: true
+  },
+  { label: "Owner", fieldName: "OwnerName", sortable: true },
+  { label: "Account", fieldName: "AccountName", sortable: true },
+  { label: "Contact", fieldName: "ContactName", sortable: true },
+  { label: "Created By Name", fieldName: "CreatedByName" }
+];
+
 export default class UserCallDetailOverview extends LightningElement {
   taskColumns = TASKCOLUMNS;
+  meetingColumns = MEETINGCOLUMNS;
   recordId;
   startDate;
   endDate;
@@ -119,7 +139,23 @@ export default class UserCallDetailOverview extends LightningElement {
       let meetingId = meetingsDetails[i].Id;
       let meetingUrl = "/" + meetingId;
 
-      meetingsDetails[i].meetingUrl = meetingUrl;
+      meetingsDetails[i].MeetingUrl = meetingUrl;
+      if (meetingsDetails[i].OwnerId) {
+        let ownerName = meetingsDetails[i].Owner.Name;
+        meetingsDetails[i].OwnerName = ownerName;
+      }
+      if (meetingsDetails[i].AccountId) {
+        let accountName = meetingsDetails[i].Account.Name;
+        meetingsDetails[i].AccountName = accountName;
+      }
+      if (meetingsDetails[i].WhoId) {
+        let contactName = meetingsDetails[i].Who.Name;
+        meetingsDetails[i].ContactName = contactName;
+      }
+      if (meetingsDetails[i].CreatedById) {
+        let createdByName = meetingsDetails[i].CreatedBy.Name;
+        meetingsDetails[i].CreatedByName = createdByName;
+      }
     }
     this.meetingsDetailsDateRange = meetingsDetails;
   }
@@ -281,6 +317,22 @@ export default class UserCallDetailOverview extends LightningElement {
       key,
       value
     }));
+  }
+
+  get isThereMeetings() {
+    return this.meetingsDetailsDateRange.length > 0;
+  }
+
+  get isThereNoMeetings() {
+    return this.meetingsDetailsDateRange.length <= 0;
+  }
+
+  get isThereCalls() {
+    return this.callDetailsDateRange.length > 0;
+  }
+
+  get isThereNoCalls() {
+    return this.callDetailsDateRange.length <= 0;
   }
 }
 

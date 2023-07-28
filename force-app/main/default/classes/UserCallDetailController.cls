@@ -75,7 +75,7 @@ public without sharing class UserCallDetailController {
   }
 
   private static List<Event> getEvents(String filter) {
-    String eventQuery = 'SELECT Id, OwnerId, Owner.Name, Subject, AccountId, Account.Name, WhoId, Who.Name, CreatedBy.Name, CreatedById FROM Event';
+    String eventQuery = 'SELECT Id, OwnerId, Owner.Name, Subject, AccountId, Account.Name, WhoId, Who.Name, CreatedBy.Name, CreatedById, CreatedDate FROM Event';
     if (filter != null) {
       eventQuery += ' WHERE ' + filter;
     }
