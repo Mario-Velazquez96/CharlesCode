@@ -5,7 +5,23 @@ export default class UserCallDataTable extends LightningElement {
   @api columns;
   @api sortedBy;
   @api sortDirection;
+  defaultSortedBy = "CreatedDate";
+  defaultSortDirection = "desc";
   pageData = [];
+
+  // connectedCallback() {
+  //   (this.columns || []).find((column) => {
+  //     if (
+  //       !!column.fieldName &&
+  //       column.fieldName === this.defaultSortedBy &&
+  //       !column.sortable
+  //     ) {
+  //       this.error = `SortableTable warning: You set a default column sort of "${column.fieldName}", but did not set sortable: true on it!`;
+  //       return true;
+  //     }
+  //     return false;
+  //   });
+  // }
 
   onHandleSort(event) {
     var fieldName = event.detail.fieldName;

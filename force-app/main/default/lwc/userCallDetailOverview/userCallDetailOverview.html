@@ -13,6 +13,15 @@
       </lightning-layout-item>
       <template if:true={showSummary}>
         <lightning-layout-item size="12" class="slds-p-around_small">
+          <c-user-call-data-table
+            record-list={callDetailsDateRange}
+            columns={taskColumns}
+            sorted-by="CreatedDate"
+            sort-direction="desc"
+          >
+          </c-user-call-data-table>
+        </lightning-layout-item>
+        <lightning-layout-item size="12" class="slds-p-around_small">
           <div class="card-container">
             <lightning-card title="Summary" icon-name="standard:metrics">
               <lightning-layout multiple-rows="true">
@@ -144,6 +153,29 @@
                     <p>No titles found</p>
                   </lightning-layout-item>
                 </template>
+              </lightning-layout>
+            </lightning-card>
+          </div>
+        </lightning-layout-item>
+
+        <lightning-layout-item
+          size="12"
+          class="slds-p-horizontal_small slds-p-bottom_small"
+        >
+          <div class="card-contai ner">
+            <lightning-card title="Details" icon-name="standard:metrics">
+              <lightning-layout multiple-rows="true">
+                <lightning-layout-item size="12" class="slds-p-around_small">
+                  <c-avonni-summary-detail>
+                    <h3
+                      slot="title"
+                      class="slds-text-heading_small slds-truncate slds-p-right_small"
+                      title="summary title"
+                    >
+                      Calls Details
+                    </h3>
+                  </c-avonni-summary-detail>
+                </lightning-layout-item>
               </lightning-layout>
             </lightning-card>
           </div>

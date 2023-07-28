@@ -1,7 +1,34 @@
 import { LightningElement } from "lwc";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import getTasks from "@salesforce/apex/UserCallDetailController.getUserCallDetails";
+
+const TASKCOLUMNS = [
+  {
+    label: "Subject",
+    fieldName: "CallUrl",
+    type: "url",
+    typeAttributes: { label: { fieldName: "Subject" }, target: "_blank" }
+  },
+  {
+    label: "Done While Traveling",
+    fieldName: "Traveling",
+    sortable: true
+  },
+  {
+    label: "Created Date",
+    fieldName: "CreatedDate",
+    type: "date",
+    sortable: true
+  },
+  { label: "Owner", fieldName: "OwnerName", sortable: true },
+  { label: "Account", fieldName: "AccountName", sortable: true },
+  { label: "Contact", fieldName: "ContactName", sortable: true },
+  { label: "Priority", fieldName: "Priority" },
+  { label: "Created By Name", fieldName: "CreatedByName" }
+];
+
 export default class UserCallDetailOverview extends LightningElement {
+  taskColumns = TASKCOLUMNS;
   recordId;
   startDate;
   endDate;
@@ -44,31 +71,54 @@ export default class UserCallDetailOverview extends LightningElement {
         this.callDetailsDateRange = data?.callDetailsDateRange;
         this.meetingsDetailsDateRange = data?.meetingsDetailsDateRange;
         this.contactTaskOwners = data?.contactsOwners;
-        console.log("contactTaskOwners: ", this.contactTaskOwners);
+        console.log("callsDetails: ", this.callDetailsThisWeek);
         this.getSummaryData();
-        this.addLinksToCalls();
-        this.addLinksToMeetings();
+        this.prepareColumnsToCalls();
+        this.prepareColumnsToMeetings();
         this.loading = false;
         this.showSummary = true;
       })
       .catch((error) => this.showToast("Error", error.body.message, "error"));
   }
 
-  addLinksToCalls() {
+  prepareColumnsToCalls() {
     let callDetails = this.callDetailsDateRange;
     for (let i = 0; i < callDetails.length; i++) {
       let callId = callDetails[i].Id;
       let callUrl = "/" + callId;
-      callDetails[i].callUrl = callUrl;
+      callDetails[i].CallUrl = callUrl;
+      if (callDetails[i].OwnerId) {
+        let ownerName = callDetails[i].Owner.Name;
+        callDetails[i].OwnerName = ownerName;
+      }
+      if (callDetails[i].AccountId) {
+        let accountName = callDetails[i].Account.Name;
+        callDetails[i].AccountName = accountName;
+      }
+      if (callDetails[i].WhoId) {
+        let contactName = callDetails[i].Who.Name;
+        callDetails[i].ContactName = contactName;
+      }
+      if (callDetails[i].CreatedById) {
+        let createdByName = callDetails[i].CreatedBy.Name;
+        callDetails[i].CreatedByName = createdByName;
+      }
+      if (callDetails[i].Done_While_Traveling__c === true) {
+        callDetails[i].Traveling = "Yes";
+      } else {
+        callDetails[i].Traveling = "No";
+      }
+      console.log("callDetails[i]: ", callDetails[i].Done_While_Traveling__c);
     }
     this.callDetailsDateRange = callDetails;
   }
 
-  addLinksToMeetings() {
+  prepareColumnsToMeetings() {
     let meetingsDetails = this.meetingsDetailsDateRange;
     for (let i = 0; i < meetingsDetails.length; i++) {
       let meetingId = meetingsDetails[i].Id;
       let meetingUrl = "/" + meetingId;
+
       meetingsDetails[i].meetingUrl = meetingUrl;
     }
     this.meetingsDetailsDateRange = meetingsDetails;

@@ -66,7 +66,7 @@ public without sharing class UserCallDetailController {
   }
 
   private static List<Task> getTasks(String filter) {
-    String taskQuery = 'SELECT Id, OwnerId, Done_While_Traveling__c, CreatedDate, Owner.Name, Subject, AccountId, Account.Name, WhoId, Who.Name, Who.Title, Priority, CreatedBy.Name, CreatedById FROM Task';
+    String taskQuery = 'SELECT Id, OwnerId, Done_While_Traveling__c, CreatedDate, Owner.Name, Subject, AccountId, Account.Name, WhoId, Who.Name, Priority, CreatedBy.Name, CreatedById FROM Task';
     if (filter != null) {
       taskQuery += ' WHERE ' + filter;
     }
