@@ -205,13 +205,15 @@ export default class UserCallDetailOverview extends LightningElement {
     let callsPerEachMarket = {};
     for (let [key, value] of Object.entries(this.contactTaskOwners)) {
       let market = value.Main_Market__c;
+      if (market == undefined || market == null || market == "") {
+        continue;
+      }
       if (market in callsPerEachMarket) {
         callsPerEachMarket[market] += 1;
       } else {
         callsPerEachMarket[market] = 1;
       }
     }
-    console.log("callsPerEachMarket: ", callsPerEachMarket);
     return callsPerEachMarket;
   }
 
@@ -222,13 +224,15 @@ export default class UserCallDetailOverview extends LightningElement {
     let callsPerEachTitle = {};
     for (let [key, value] of Object.entries(this.contactTaskOwners)) {
       let title = value.Title;
+      if (title == undefined || title == null || title == "") {
+        continue;
+      }
       if (title in callsPerEachTitle) {
         callsPerEachTitle[title] += 1;
       } else {
         callsPerEachTitle[title] = 1;
       }
     }
-    console.log("callsPerEachTitle: ", callsPerEachTitle);
     return callsPerEachTitle;
   }
 

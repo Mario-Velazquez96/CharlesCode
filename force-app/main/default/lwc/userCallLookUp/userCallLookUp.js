@@ -24,7 +24,7 @@ export default class UserCallLookUp extends LightningElement {
   @track boxClass =
     "slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-has-focus";
   @track inputClass = "";
-
+  //think can be deleted
   connectedCallback() {
     if (!!this.recordId) {
       this.isValueSelected = true;
@@ -37,6 +37,7 @@ export default class UserCallLookUp extends LightningElement {
         "slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-has-focus";
     }
   }
+  //finish think can be deleted
 
   @wire(lookUp, {
     searchTerm: "$searchTerm",
@@ -52,6 +53,7 @@ export default class UserCallLookUp extends LightningElement {
       this.records = undefined;
     }
   }
+
   handleClick() {
     this.searchTerm = "";
     this.inputClass = "slds-has-focus";
@@ -153,5 +155,9 @@ export default class UserCallLookUp extends LightningElement {
       variant: variant
     });
     this.dispatchEvent(event);
+  }
+
+  get isDisabled() {
+    return this.startDate || this.endDate ? false : true;
   }
 }
