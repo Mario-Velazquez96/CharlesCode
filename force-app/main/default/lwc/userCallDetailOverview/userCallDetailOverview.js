@@ -79,7 +79,7 @@ export default class UserCallDetailOverview extends LightningElement {
     this.endDate = event.detail.endDate;
     //let filters = event.detail.queryFilter;
     getTasks({
-      accountId: this.recordId,
+      userId: this.recordId,
       startDate: this.startDate,
       endDate: this.endDate
     })
