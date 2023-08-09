@@ -89,15 +89,15 @@ public without sharing class UserCallDetailController {
   ) {
     String filter = 'OwnerId = \'' + ownerId + '\'';
     if (startDate != null && endDate != null) {
-      filter =
-        'CreatedDate >= ' +
+      filter +=
+        ' AND CreatedDate >= ' +
         getDateTimeFormat(startDate) +
         ' AND CreatedDate <= ' +
         getDateTimeFormat(endDate);
     } else if (startDate != null) {
-      filter = 'CreatedDate >= ' + getDateTimeFormat(startDate);
+      filter += ' AND CreatedDate >= ' + getDateTimeFormat(startDate);
     } else if (endDate != null) {
-      filter = 'CreatedDate <= ' + getDateTimeFormat(endDate);
+      filter += ' AND CreatedDate <= ' + getDateTimeFormat(endDate);
     }
     return filter;
   }
@@ -114,13 +114,13 @@ public without sharing class UserCallDetailController {
   private static String getPeriodFilter(String ownerId, String period) {
     String filter = 'OwnerId = \'' + ownerId + '\'';
     if (period == THIS_WEEK) {
-      filter = 'CreatedDate = THIS_WEEK';
+      filter += ' AND CreatedDate = THIS_WEEK';
     } else if (period == LAST_WEEK) {
-      filter = 'CreatedDate = LAST_WEEK';
+      filter += ' AND CreatedDate = LAST_WEEK';
     } else if (period == THIS_MONTH) {
-      filter = 'CreatedDate = THIS_MONTH';
+      filter += ' AND CreatedDate = THIS_MONTH';
     } else if (period == LAST_MONTH) {
-      filter = 'CreatedDate = LAST_MONTH';
+      filter += ' AND CreatedDate = LAST_MONTH';
     }
     return filter;
   }
