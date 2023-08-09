@@ -91,7 +91,6 @@ export default class UserCallDetailOverview extends LightningElement {
         this.callDetailsDateRange = data?.callDetailsDateRange;
         this.meetingsDetailsDateRange = data?.meetingsDetailsDateRange;
         this.contactTaskOwners = data?.contactsOwners;
-        console.log("callsDetails: ", this.callDetailsThisWeek);
         this.getSummaryData();
         this.prepareColumnsToCalls();
         this.prepareColumnsToMeetings();
@@ -128,7 +127,6 @@ export default class UserCallDetailOverview extends LightningElement {
       } else {
         callDetails[i].Traveling = "No";
       }
-      console.log("callDetails[i]: ", callDetails[i].Done_While_Traveling__c);
     }
     this.callDetailsDateRange = callDetails;
   }
@@ -181,7 +179,6 @@ export default class UserCallDetailOverview extends LightningElement {
       let date = new Date(this.callDetailsDateRange[i].CreatedDate);
       let formattedDate =
         date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear();
-      console.log("formattedDate: ", formattedDate);
 
       if (this.callDetailsDateRange[i].Done_While_Traveling__c) {
         datesWhileTraveling.add(formattedDate);
@@ -246,7 +243,6 @@ export default class UserCallDetailOverview extends LightningElement {
         meetingsScheduledBySelf += 1;
       }
     }
-    console.log("meetingsScheduledBySelf: ", meetingsScheduledBySelf);
     return meetingsScheduledBySelf;
   }
 
@@ -260,7 +256,6 @@ export default class UserCallDetailOverview extends LightningElement {
         meetingsScheduledByOthers += 1;
       }
     }
-    console.log("meetingsScheduledByOthers: ", meetingsScheduledByOthers);
     return meetingsScheduledByOthers;
   }
 
@@ -271,6 +266,14 @@ export default class UserCallDetailOverview extends LightningElement {
       variant: variant
     });
     this.dispatchEvent(event);
+  }
+
+  isMarketDataLong() {
+    return this.marketData.length > 18;
+  }
+
+  isTitleDataLong() {
+    return this.titleData.length > 18;
   }
 
   get callDetailThisWeekSize() {
@@ -338,25 +341,28 @@ export default class UserCallDetailOverview extends LightningElement {
   get isThereNoCalls() {
     return this.callDetailsDateRange.length <= 0;
   }
-}
 
-/*console.log(
-          "callDetailsThisWeek: ",
-          this.callDetailsThisWeek[0].CreatedDate
-        );
-        //test
-        let dateTest = new Date(this.callDetailsThisWeek[0].CreatedDate);
-        let formattedDate =
-          dateTest.getMonth() +
-          1 +
-          "/" +
-          dateTest.getDate() +
-          "/" +
-          dateTest.getFullYear();
-        //how check type of dateTest?
-        console.log("dateTest: ", formattedDate);
-        console.log("dateTest: ", typeof formattedDate);
-        console.log(
-          "callDetailsDateRange: ",
-          JSON.stringify(this.callDetailsDateRange)
-        );*/
+  // call this method every time marketData is updated
+
+  get layoutMarketClass() {
+    return `slds-p-horizontal_small  ${
+      this.isMarketDataLong() ? "limited-height" : ""
+    }`;
+  }
+
+  get layoutTitleClass() {
+    return `slds-p-horizontal_small  ${
+      this.isTitleDataLong() ? "limited-height" : ""
+    }`;
+  }
+
+  get layoutCallClass() {
+    return `${this.callDetailsDateRange.length > 12 ? "limited-height" : ""}`;
+  }
+
+  get layoutMeetingClass() {
+    return `${
+      this.meetingsDetailsDateRange.length > 12 ? "limited-height" : ""
+    }`;
+  }
+}

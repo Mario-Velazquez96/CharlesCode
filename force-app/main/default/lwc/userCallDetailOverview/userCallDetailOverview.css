@@ -8,3 +8,8 @@
 .datatable-container {
   height: 350px;
 }
+
+.limited-height {
+  max-height: 350px;
+  overflow: auto;
+}

@@ -91,7 +91,7 @@
         >
           <div class="card-container">
             <lightning-card title="Markets" icon-name="standard:metrics">
-              <lightning-layout multiple-rows="true">
+              <lightning-layout multiple-rows="true" class={layoutMarketClass}>
                 <template lwc:if={isThereMarkets}>
                   <template for:each={marketData} for:item="market">
                     <lightning-layout-item
@@ -123,7 +123,7 @@
         >
           <div class="card-container">
             <lightning-card title="Titles" icon-name="standard:metrics">
-              <lightning-layout multiple-rows="true">
+              <lightning-layout multiple-rows="true" class={layoutTitleClass}>
                 <template lwc:if={isThereTitles}>
                   <template for:each={titleData} for:item="title">
                     <lightning-layout-item
@@ -166,7 +166,7 @@
                       Calls Details
                     </h3>
                     <template lwc:if={isThereCalls}>
-                      <div class="datatable-container">
+                      <div class={layoutCallClass}>
                         <c-user-call-data-table
                           record-list={callDetailsDateRange}
                           columns={taskColumns}
@@ -191,7 +191,7 @@
                       Meetings Details
                     </h3>
                     <template lwc:if={isThereMeetings}>
-                      <div class="datatable-container">
+                      <div class={layoutMeetingClass}>
                         <c-user-call-data-table
                           record-list={meetingsDetailsDateRange}
                           columns={meetingColumns}
